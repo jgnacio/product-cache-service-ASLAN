@@ -29,6 +29,8 @@ FROM base AS build
 WORKDIR /usr/src/app
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
+RUN npx prisma generate
+RUN npx prisma migrate deploy
 RUN npm run build
 # --------------------------------------------------
 
@@ -45,9 +47,10 @@ RUN adduser --system --uid 1001 worker
 # Copy all files required
 # Automatically leverage output traces to reduce image size
 COPY --from=build --chown=worker:nodejs /usr/src/app/dist ./
-COPY --from=build --chown=node:nodejs /usr/src/app/prisma/ ./prisma/
-COPY --chown=node:nodejs ./run.sh ./
-COPY --from=deps --chown=node:nodejs /usr/src/app/node_modules ./node_modules 
+COPY --from=build --chown=worker:nodejs /usr/src/app/prisma/ ./prisma/
+COPY --chown=worker:nodejs ./run.sh ./
+COPY --from=deps --chown=worker:nodejs /usr/src/app/node_modules ./node_modules 
+COPY --from=build --chown=node:nodejs /usr/src/app/.env ./
 
 # Install pm2 (production process manager for node.js)
 RUN npm install pm2@latest -g
