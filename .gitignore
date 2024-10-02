@@ -35,8 +35,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+dist
 
 certificates
 
 # token
 token(remove-on-prod).ts
+
