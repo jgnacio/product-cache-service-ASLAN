@@ -1,13 +1,11 @@
+import axios from "axios";
+import { ProductCategory } from "../../../domain/product/entities/Product";
 import { IProductCategoryRepository } from "../../../domain/product/repositories/IProductCategoryRepository";
 import { UnicomAPICategory } from "../entities/Category/UnicomAPICategory";
 import {
   defaultUnicomAPICategoryRequest,
-  defaultUnicomAPIProductRequest,
   UnicomAPICategoryRequest,
-  UnicomAPIProductRequest,
 } from "../UnicomAPIRequets";
-import { ProductCategory } from "../../../domain/product/entities/Product";
-import axios from "axios";
 
 const API_UNICOM_TOKEN = process.env.API_UNICOM_TOKEN;
 const API_UNICOM_URL = process.env.API_UNICOM_URL;
@@ -112,6 +110,7 @@ export class UnicomAPIProductCategoryAdapter
     return {
       id: category.codigo_grupo,
       name: category.descripcion,
+      code: category.codigo_grupo,
       subCategories:
         category.grupos_hijos
           ?.map(this.UnicomMapSubCategory.bind(this))

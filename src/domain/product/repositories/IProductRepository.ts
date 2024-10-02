@@ -1,5 +1,5 @@
 import { Product, ProductType } from "../entities/Product";
-import { UnicomAPIProductRequest } from "@/Resources/API/Unicom/UnicomAPIRequets";
+import { UnicomAPIProductRequest } from "@/providers/Unicom/UnicomAPIRequets";
 
 export interface IProductRepository {
   getBySKU(sku: string): Promise<Product | null>;

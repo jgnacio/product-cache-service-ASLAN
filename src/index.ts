@@ -5,8 +5,12 @@ var cron = require("node-cron");
 let ejecucionNumero = 0;
 let MaximunAttempts = 6;
 
+console.log(
+  "Iniciando ejecución programada.\nSe ejecutará cada 12 horas empezando a las 10:00AM.\n"
+);
+
 // ejecutar el main cada 12 horas empezando a las 04:00
-cron.schedule("0 9,10 * * *", () => {
+cron.schedule("0 10,22 * * *", () => {
   ejecucionNumero++; // Incrementa el contador en cada ejecución
 
   console.log(
