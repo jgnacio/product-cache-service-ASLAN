@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                   String       @id @default(uuid()) // ID único generado automáticamente
+  sku                  String // SKU del producto
+  partNumber           String // Número de parte del producto
+  price                Float // Precio del producto
+  title                String // Título del producto
+  description          String       @db.Text() // Descripción
+  category             Category     @relation(fields: [categoryId], references: [id]) // Relación con Category
+  categoryId           String // Clave foránea que referencia el ID de Category
+  marca                String // Marca del producto
+  stock                Int // Cantidad en stock
+  availability         Availability // Estado de disponibilidad, usando un enum
+  favorite             Boolean? // Favorito, opcional
+  onSale               Boolean? // Si está en oferta, opcional
+  guaranteeDays        Int? // Días de garantía, opcional
+  estimatedArrivalDate DateTime? // Fecha estimada de llegada, opcional
+  provider             Provider     @relation(fields: [providerId], references: [ID_Provider]) // Relación con Provider
+  providerId           Int
+  createdAt            DateTime     @default(now()) // Fecha de creación
+  updatedAt            DateTime     @updatedAt // Fecha de la última actualización
+}
+
+model Provider {
+  ID_Provider Int       @id @default(autoincrement())
+  name        String    @unique
+  contact     String
+  direction   String    @db.Text()
+  products    Product[]
+}
+
+model Category {
+  id     String @id @default(uuid()) // ID único generado automáticamente
+  name   String // Nombre de la categoría
+  nameES String // Nombre de la categoría en español
+  code   String // Código único de la categoría
+
+  products Product[] // Relación con productos
+}
+
+enum Availability {
+  in_stock
+  out_of_stock
+  pre_order
+  on_demand
+}
