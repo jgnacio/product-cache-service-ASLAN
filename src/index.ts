@@ -1,24 +1,12 @@
 import { ProductType } from "./domain/product/entities/Product";
 import { createProduct, getAllProducts } from "./Utils/Functions/ProductDB";
-var cron = require("node-cron");
+import { HttpFunction } from "@google-cloud/functions-framework";
 
-let ejecucionNumero = 0;
-let MaximunAttempts = 6;
+const PASSWORD_FUNCTION = process.env.PASSWORD_FUNCTION;
 
-console.log(
-  "Iniciando ejecución programada.\nSe ejecutará cada 12 horas empezando a las 11:00AM.\n"
-);
-
-// ejecutar el main cada 12 horas empezando a las 04:00
-cron.schedule("0 11,22 * * *", () => {
-  ejecucionNumero++; // Incrementa el contador en cada ejecución
-
-  console.log(
-    `Ejecución programada.\nHora: ${new Date().toLocaleTimeString()} \nFecha: ${new Date().toLocaleDateString()} \n\nEjecución Número: ${ejecucionNumero}`
-  );
-
-  main();
-});
+// console.log(
+//   "Iniciando ejecución programada.\nSe ejecutará cada 12 horas empezando a las 11:00AM.\n"
+// );
 
 //   createAndListCategories();
 //   createAllDefaultProviders();
@@ -27,19 +15,11 @@ const main = async () => {
   // 1. Obtener todos los productos
   let products: ProductType[] = [];
 
-  do {
-    MaximunAttempts--;
-    products = await getAllProducts();
-
-    if (products.length === 0) {
-      console.log("No products found, retrying in 30 minutes");
-      await new Promise((resolve) => setTimeout(resolve, 1800000));
-    }
-  } while (products.length === 0 && MaximunAttempts > 0);
+  products = await getAllProducts();
 
   if (products.length === 0) {
     console.log("No products found, exiting");
-    return;
+    throw new Error("No products found");
   }
 
   console.log("Products", products.length);
@@ -48,4 +28,27 @@ const main = async () => {
     const newProduct = await createProduct(product);
     console.log("New Product", newProduct);
   }
+};
+
+// main();
+
+export const hello: HttpFunction = async (req, res) => {
+  // Configura que sea Post y que tenga que enviar una contraseña para poder ejecutar la función
+  if (req.method !== "POST") {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  if (req.body.password === PASSWORD_FUNCTION) {
+    // Ejectuar la función principal y manejo de errores
+    try {
+      await main();
+      res.send("Hello, World!");
+    } catch (error) {
+      console.error("Error", error);
+      res.status(500).send("Error");
+    }
+  }
+  res.status(401).send("Unauthorized");
+  return;
 };

@@ -1,11 +1,15 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "v20.17.0"
+  },
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
+    "gcp-build": "tsc",
+    "start": "functions-framework --target hello --port 8081",
     "dev": "nodemon ./src/index.ts",
+    "deploy": "gcloud functions deploy cacheProductos --gen2 --runtime=nodejs20 --region=us-west1 --source=. --entry-point=hello --trigger-http --allow-unauthenticated",
     "test": "jest --runInBand"
   },
   "keywords": [],
@@ -24,6 +28,7 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.2",
     "@internationalized/date": "^3.5.6",
     "@prisma/client": "^5.19.1",
     "@types/cors": "^2.8.17",
@@ -32,7 +37,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "node-cron": "^3.0.3",
     "nodemon": "^3.1.6",
     "ts-node-dev": "^2.0.0",
     "uuid": "^10.0.0"

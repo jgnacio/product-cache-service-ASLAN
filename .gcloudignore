@@ -1,0 +1,16 @@
+<!-- Ignora dependencias de node_modules (no es necesario subirlas porque se instalarán automáticamente) -->
+
+node_modules/
+npm-debug.log
+
+<!-- Ignora archivos de pruebas -->
+
+_.spec.ts
+_.test.ts
+coverage/
+
+<!-- Ignora archivos temporales del editor o sistema operativo -->
+
+_.swp
+.vscode/
+_.log

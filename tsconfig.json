@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2023",
+    "target": "ES2020",
     "module": "commonjs",
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./lib",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
@@ -14,5 +14,5 @@
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"] // Excluye tests si no los necesitas
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
