@@ -16,7 +16,12 @@ export const createProduct = async (
 
   const productExists = await prisma.product.findFirst({
     where: {
-      OR: [{ title: product.title }, { sku: product.sku }],
+      AND: [
+        { title: product.title },
+        { sku: product.sku },
+        { providerId: 1 },
+        { partNumber: partNumber },
+      ],
     },
   });
 
@@ -24,34 +29,37 @@ export const createProduct = async (
     console.log("Product already exists", productExists);
     // Update Product
     updateProduct(productExists, product);
+  } else {
+    let newProduct;
+    try {
+      newProduct = await prisma.product.create({
+        data: {
+          title: product.title,
+          price: product.price,
+          categoryId: product.category.id,
+          providerId: 1,
+          availability: product.availability,
+          description: product.description,
+          marca: product.marca,
+          partNumber: partNumber,
+          sku: product.sku,
+          stock: product.stock,
+          createdAt: new Date(),
+          estimatedArrivalDate: product.estimatedArrivalDate,
+          updatedAt: new Date(),
+          guaranteeDays: product.guaranteeDays,
+          favorite: product.favorite,
+          onSale: product.onSale,
+        },
+      });
+      console.log("Product created", newProduct);
+    } catch (error) {
+      console.log("Error creating product", product, error);
+    }
+    return newProduct;
   }
 
-  let newProduct;
-  try {
-    newProduct = await prisma.product.create({
-      data: {
-        title: product.title,
-        price: product.price,
-        categoryId: product.category.id,
-        providerId: 1,
-        availability: product.availability,
-        description: product.description,
-        marca: product.marca,
-        partNumber: partNumber,
-        sku: product.sku,
-        stock: product.stock,
-        createdAt: new Date(),
-        estimatedArrivalDate: product.estimatedArrivalDate,
-        updatedAt: new Date(),
-        guaranteeDays: product.guaranteeDays,
-        favorite: product.favorite,
-        onSale: product.onSale,
-      },
-    });
-  } catch (error) {
-    console.log("Error creating product", product, error);
-  }
-  return newProduct;
+  return productExists;
 };
 
 export const updateProduct = async (

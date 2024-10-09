@@ -1,6 +1,9 @@
+import { create } from "domain";
+import { createAndListCategories } from "./_actions/defaults/createAllDefaultCategories";
 import { ProductType } from "./domain/product/entities/Product";
 import { createProduct, getAllProducts } from "./Utils/Functions/ProductDB";
 import { HttpFunction } from "@google-cloud/functions-framework";
+import createAllDefaultProviders from "./_actions/defaults/createAllDefaultProviders";
 
 const PASSWORD_FUNCTION = process.env.PASSWORD_FUNCTION;
 
@@ -8,25 +11,20 @@ const PASSWORD_FUNCTION = process.env.PASSWORD_FUNCTION;
 //   "Iniciando ejecución programada.\nSe ejecutará cada 12 horas empezando a las 11:00AM.\n"
 // );
 
-//   createAndListCategories();
-//   createAllDefaultProviders();
+// createAndListCategories();
+// createAllDefaultProviders();
 
 const main = async () => {
-  // 1. Obtener todos los productos
+  // // 1. Obtener todos los productos
   let products: ProductType[] = [];
-
   products = await getAllProducts();
-
   if (products.length === 0) {
     console.log("No products found, exiting");
     throw new Error("No products found");
   }
-
   console.log("Products", products.length);
-
   for (const product of products) {
-    const newProduct = await createProduct(product);
-    console.log("New Product", newProduct);
+    await createProduct(product);
   }
 };
 
