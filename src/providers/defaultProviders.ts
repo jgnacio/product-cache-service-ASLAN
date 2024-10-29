@@ -13,4 +13,10 @@ export const defaultProviders = [
       "Piedra Alta 1628, Entre Cerro Largo y Paysandú, 11200 Montevideo, Departamento de Montevideo",
     products: [],
   },
+  {
+    name: "Solutionbox",
+    contact: "2900 0111",
+    direction: "Galicia 780, 11100 Montevideo, Departamento de Montevideo",
+    products: [],
+  },
 ];
