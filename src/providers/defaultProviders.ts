@@ -7,7 +7,7 @@ export const defaultProviders = [
     products: [],
   },
   {
-    name: "PC Service",
+    name: "PCService",
     contact: "2400 4449",
     direction:
       "Piedra Alta 1628, Entre Cerro Largo y Paysandú, 11200 Montevideo, Departamento de Montevideo",
